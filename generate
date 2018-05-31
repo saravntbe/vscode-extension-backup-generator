@@ -39,7 +39,7 @@ if (result.error) {
   process.exit(1);
 }
 var list =
-  "##MY VS CODE EXTENSION \n ____ \n Generated Using [vscode-extension-backup-generator](https://github.com/saravntbe/vscode-extension-backup-generator) \n ____ \n";
+  "## MY VS CODE EXTENSION \n ____ \n Generated Using [vscode-extension-backup-generator](https://github.com/saravntbe/vscode-extension-backup-generator) \n ____ \n";
 list += String(result.stdout)
   .split("\n")
   .filter(Boolean)
