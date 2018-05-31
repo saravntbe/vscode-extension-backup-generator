@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+var vcodeName = ["code", "code-insiders"];
+var originalYourCode = process.argv[2].toString();
+var fileName = (process.argv[3] || "README") + ".md";
+var yourCode = originalYourCode.toLowerCase();
+
+if (!vcodeName.includes(yourCode)) {
+  console.error(" 🚨 You RUN " + originalYourCode + " ");
+  console.log(
+    " 🚑 By DEFAULT the command will be " +
+      vcodeName[0] +
+      " or " +
+      vcodeName[1] +
+      ""
+  );
+  process.exit(1);
+}
+
+function PathINfo() {
+  console.log(
+    "    May be vs code Executable is not  avalible in your path, \n👉 Try Running " +
+      vcodeName[0] +
+      " --help or " +
+      vcodeName[1] +
+      " --help in your shell. \n If you get back help command of vscode , it's in path & problem is someother. \n📖 If not refer vscode docs for integrating to your $PATH"
+  );
+}
+
+const { spawn, spawnSync } = require("child_process");
+process.on("error", function(err) {
+  console.log("Error running Scripts");
+});
+
+var result = spawnSync(yourCode, ["--list-extensions"]);
+
+if (result.error) {
+  console.error("💥", result.error);
+  PathINfo();
+  process.exit(1);
+}
+var list = "##MY VS CODE EXTENSION \n ____ \n";
+list += String(result.stdout)
+  .split("\n")
+  .filter(Boolean)
+  .map(
+    x => `- [${x}](https://marketplace.visualstudio.com/items?itemName=${x})`
+  )
+  .join("\n");
+
+// write to a md file
+var path = require("path").resolve(process.cwd(), fileName);
+var fs = require("fs").createWriteStream(path);
+fs.write(list);
+fs.on("close", function(e) {
+  process.exit(1);
+});
+console.log("⏳ Writing to a " + fileName + " ... ");
+process.on("exit", function(e) {
+  console.log("   🎉 Success ! ");
+});
